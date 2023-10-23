@@ -7,7 +7,7 @@ typedef struct {
     int len;
 } CString;
 
-CString *Init_CString(char *str);
+CString* Init_CString(char *str);
 void Delete_CString(CString *p);
 char Chomp(CString *cstring);
 CString *Append_Chars_To_CString(CString *p, char *str);
@@ -16,7 +16,7 @@ int main(void)
 {
     CString *mystr;
     char c;
-    mystr = Init_CString("Hello!");
+    ² = Init_CString("Hello!");
     printf("Init:\n str: `%s' len: %d\n", mystr->str, mystr->len);
     c = Chomp(mystr);
     printf("Chomp '%c':\n str:`%s' len: %d\n", c, mystr->str, mystr->len);
@@ -26,7 +26,7 @@ int main(void)
     return 0;
 }
 
-CString *Init_CString(char *str)
+CString* Init_CString(char *str)
 {
     CString *p = (CString*)malloc(sizeof(CString));
     p->str = (char*)malloc(sizeof(str)+1);
