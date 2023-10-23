@@ -6,4 +6,7 @@ all : dplist.c dplist.h program.c
 clean:
 	rm -fr *.o build/*
 	rm -r build
+	rm vgcore.*
 
+memtest: all
+	valgrind --leak-check=yes ./build/dplistprogram

@@ -93,9 +93,22 @@ dplist_t *dpl_remove_at_index(dplist_t *list, int index) {
 }
 
 int dpl_size(dplist_t *list) {
+    int count = 1;
 
-    //TODO: add your code here
-    return -1;
+    if(list == NULL){
+        return -1;
+    }
+    else if(list->head == NULL){
+        return 0;
+    }
+    else{
+        dplist_node_t *dplist_node = list->head;
+        while(dplist_node->next != NULL){
+            dplist_node = dplist_node->next;
+            count++;
+        }
+        return count;
+    }
 }
 
 dplist_node_t *dpl_get_reference_at_index(dplist_t *list, int index) {

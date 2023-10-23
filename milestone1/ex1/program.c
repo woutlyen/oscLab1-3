@@ -13,6 +13,8 @@ void ck_assert_msg(bool result, char * msg){
 }
 int main(void)
 {
+    ck_assert_msg(dpl_size(NULL) == -1, "List is NULL.");
+
     dplist_t *numbers = NULL;
     numbers = dpl_create();
 
