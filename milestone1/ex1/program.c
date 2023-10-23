@@ -11,8 +11,9 @@
 void ck_assert_msg(bool result, char * msg){
     if(!result) printf("%s\n", msg);
 }
-int main(void)
-{
+
+void dpl_size_test(void){
+
     ck_assert_msg(dpl_size(NULL) == -1, "List is NULL.");
 
     dplist_t *numbers = NULL;
@@ -31,6 +32,34 @@ int main(void)
     ck_assert_msg(dpl_size(numbers) == 3, "Numbers must contain 3 elements.");
 
     dpl_free(&numbers);
+}
+
+void dpl_get_reference_at_index_test(void){
+
+    ck_assert_msg(dpl_get_reference_at_index(NULL,0) == NULL, "List should be NULL.");
+
+    dplist_t *numbers = NULL;
+    numbers = dpl_create();
+
+    ck_assert_msg(dpl_get_reference_at_index(numbers,0) == NULL, "List should be empty.");
+
+    dpl_insert_at_index(numbers, 'a', 0);
+
+    /*
+    ck_assert_msg(dpl_get_reference_at_index(numbers,0) == numbers->head, "Should return pointer in head of list.");
+    ck_assert_msg(dpl_get_reference_at_index(numbers,1) == numbers->head, "Should return pointer in head of list.");
+    ck_assert_msg(dpl_get_reference_at_index(numbers,-1) == numbers->head, "Should return pointer in head of list.");
+    */
+
+    dpl_free(&numbers);
+}
+
+
+int main(void)
+{
+    //dpl_size_test();
+    dpl_get_reference_at_index_test();
 
     return 0;
 }
+

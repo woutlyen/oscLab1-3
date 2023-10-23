@@ -112,11 +112,29 @@ int dpl_size(dplist_t *list) {
 }
 
 dplist_node_t *dpl_get_reference_at_index(dplist_t *list, int index) {
-    //int count = 0 ;
-    dplist_node_t *dummy = NULL;
+    int count = 0 ;
+    //dplist_node_t *dummy = NULL;
 
-    //TODO: add your code here
-    return dummy;
+    if(list == NULL || list->head == NULL){
+        return NULL;
+    }
+    else if(index <= 0){
+        return list->head;
+    }
+    else if(index > dpl_size(list)-1){
+        dplist_node_t *dplist_node = list->head;
+        while(dplist_node->next != NULL){
+            dplist_node = dplist_node->next;
+        }
+        return dplist_node;
+    }
+    else{
+        dplist_node_t *dplist_node = list->head;
+        for(count=0; count < index; count++){
+            dplist_node = dplist_node->next;
+        }
+        return dplist_node;
+    }
 }
 
 element_t dpl_get_element_at_index(dplist_t *list, int index) {
