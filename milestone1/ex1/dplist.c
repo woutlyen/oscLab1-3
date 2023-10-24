@@ -32,9 +32,34 @@ dplist_t *dpl_create() {
 
 void dpl_free(dplist_t **list) {
 
-    //TODO: add your code here
-    //Do extensive testing with valgrind. 
+    //Do extensive testing with valgrind.
+    if(list == NULL){
+        return;
+    }
+    dplist_t *p = *list;
+    if(p == NULL){
+        return;
+    }
+    else if(p->head == NULL){
+        free(p);
+        *list=NULL;
+        return;
+    }
+    else{
+        dplist_node_t *node = p->head;
+        dplist_node_t *next = node->next;
 
+        while (next != NULL) {
+            free(next->prev);
+            node = next;
+            next = next->next;
+        }
+        free(node);
+
+        free(p);
+        *list=NULL;
+        return;
+    }
 }
 
 /* Important note: to implement any list manipulation operator (insert, append, delete, sort, ...), always be aware of the following cases:

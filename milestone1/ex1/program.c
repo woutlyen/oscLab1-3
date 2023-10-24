@@ -116,11 +116,12 @@ void dpl_get_index_of_element_test(void){
     dpl_free(&numbers);
 }
 
+
 int main(void)
 {
-    //dpl_size_test();
-    //dpl_get_reference_at_index_test();
-    //dpl_get_element_at_index_test();
+    dpl_size_test();
+    dpl_get_reference_at_index_test();
+    dpl_get_element_at_index_test();
     dpl_get_index_of_element_test();
 
     return 0;
