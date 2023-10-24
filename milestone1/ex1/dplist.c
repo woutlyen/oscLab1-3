@@ -112,7 +112,7 @@ int dpl_size(dplist_t *list) {
 }
 
 dplist_node_t *dpl_get_reference_at_index(dplist_t *list, int index) {
-    int count = 0 ;
+    int count;
     //dplist_node_t *dummy = NULL;
 
     if(list == NULL || list->head == NULL){
@@ -150,9 +150,21 @@ element_t dpl_get_element_at_index(dplist_t *list, int index) {
 }
 
 int dpl_get_index_of_element(dplist_t *list, element_t element) {
+    int count;
 
-    //TODO: add your code here
-    return -1;
+    if(list == NULL || list->head == NULL){
+        return -1;
+    }
+    else{
+        dplist_node_t *dplist_node = list->head;
+        for(count=0; count < dpl_size(list); count++){
+            if(dplist_node->element == element){
+                return count;
+            }
+            dplist_node = dplist_node->next;
+        }
+        return -1;
+    }
 }
 
 
