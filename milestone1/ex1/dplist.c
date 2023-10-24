@@ -139,8 +139,14 @@ dplist_node_t *dpl_get_reference_at_index(dplist_t *list, int index) {
 
 element_t dpl_get_element_at_index(dplist_t *list, int index) {
 
-    //TODO: add your code here
-    return '\e';
+    dplist_node_t* node = dpl_get_reference_at_index(list, index);
+
+    if(node == NULL){
+        return 0;
+    }
+    else{
+        return node->element;
+    }
 }
 
 int dpl_get_index_of_element(dplist_t *list, element_t element) {
