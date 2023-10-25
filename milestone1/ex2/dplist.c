@@ -163,7 +163,6 @@ int dpl_size(dplist_t *list) {
 
 dplist_node_t *dpl_get_reference_at_index(dplist_t *list, int index) {
     int count;
-    //dplist_node_t *dummy = NULL;
 
     if(list == NULL || list->head == NULL){
         return NULL;
