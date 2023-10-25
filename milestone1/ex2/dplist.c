@@ -191,7 +191,7 @@ element_t dpl_get_element_at_index(dplist_t *list, int index) {
     dplist_node_t* node = dpl_get_reference_at_index(list, index);
 
     if(node == NULL){
-        return 0;
+        return NULL;
     }
     else{
         return node->element;
