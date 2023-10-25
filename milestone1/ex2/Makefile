@@ -7,3 +7,5 @@ clean:
 	rm -fr *.o build/*
 	rm -r build
 
+memtest: all
+	valgrind --leak-check=yes ./build/dplistprogram

@@ -51,10 +51,12 @@ void dpl_free(dplist_t **list) {
         dplist_node_t *next = node->next;
 
         while (next != NULL) {
+            free(next->prev->element);
             free(next->prev);
             node = next;
             next = next->next;
         }
+        free(node->element);
         free(node);
 
         free(p);
