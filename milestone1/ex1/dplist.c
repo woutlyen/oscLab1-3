@@ -114,7 +114,29 @@ dplist_t *dpl_insert_at_index(dplist_t *list, element_t element, int index) {
 dplist_t *dpl_remove_at_index(dplist_t *list, int index) {
 
     //TODO: add your code here
-    return NULL;
+
+    if(list == NULL){
+        return NULL;
+    }
+    else if(list->head == NULL){
+        return list;
+    }
+    else{
+        dplist_node_t *node = dpl_get_reference_at_index(list, index);
+        if(index <= 0){
+            list->head = node->next;
+            node->next->prev = NULL;
+        }
+        else if(index >= dpl_size(list)-1){
+            node->prev->next = NULL;
+        }
+        else{
+            node->next->prev = node->prev;
+            node->prev->next = node->next;
+        }
+        free(node);
+        return list;
+    }
 }
 
 int dpl_size(dplist_t *list) {

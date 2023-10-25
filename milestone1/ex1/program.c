@@ -116,13 +116,46 @@ void dpl_get_index_of_element_test(void){
     dpl_free(&numbers);
 }
 
+void dpl_remove_at_index_test(void){
+
+    ck_assert_msg(dpl_remove_at_index(NULL,0) == NULL, "There is no list.");
+
+    dplist_t *numbers = NULL;
+    numbers = dpl_create();
+
+    ck_assert_msg(dpl_remove_at_index(numbers,0) == numbers, "There are no elements.");
+
+    dpl_insert_at_index(numbers, 'a', 0);
+    dpl_insert_at_index(numbers, 'b', 1);
+    dpl_insert_at_index(numbers, '1', 2);
+    dpl_insert_at_index(numbers, '\e', 3);
+    dpl_insert_at_index(numbers, 'c', 4);
+
+    dplist_t *list = dpl_remove_at_index(numbers,-10);
+    ck_assert_msg(dpl_size(list) == dpl_size(numbers), "Size should be 4.");
+    ck_assert_msg(dpl_get_element_at_index(numbers,0) == 'b', "Element should be 'b'.");
+
+    list = dpl_remove_at_index(numbers,10);
+    ck_assert_msg(dpl_size(list) == dpl_size(numbers), "Size should be 3.");
+    ck_assert_msg(dpl_get_element_at_index(numbers,2) == '\e', "Element should be '\e'.");
+
+    list = dpl_remove_at_index(numbers,1);
+    ck_assert_msg(dpl_size(list) == dpl_size(numbers), "Size should be 2.");
+    ck_assert_msg(dpl_get_element_at_index(numbers,0) == 'b', "Element should be 'b'.");
+    ck_assert_msg(dpl_get_element_at_index(numbers,1) == '\e', "Element should be '\e'.");
+
+    dpl_free(&numbers);
+}
+
 
 int main(void)
 {
+
     dpl_size_test();
     dpl_get_reference_at_index_test();
     dpl_get_element_at_index_test();
     dpl_get_index_of_element_test();
+    dpl_remove_at_index_test();
 
     return 0;
 }
