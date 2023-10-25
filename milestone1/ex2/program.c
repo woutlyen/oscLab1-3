@@ -81,7 +81,7 @@ void dpl_get_element_at_index_test(void){
 
     dpl_free(&numbers);
 }
-/*
+
 void dpl_get_index_of_element_test(void){
 
     ck_assert_msg(dpl_get_index_of_element(NULL,0) == -1, "There is no list.");
@@ -91,30 +91,40 @@ void dpl_get_index_of_element_test(void){
 
     ck_assert_msg(dpl_get_index_of_element(numbers,0) == -1, "There are no elements.");
 
-    dpl_insert_at_index(numbers, "a", 0);
-    ck_assert_msg(dpl_get_index_of_element(numbers,"a") == 0, "Index should be 0.");
+    dpl_insert_at_index(numbers, "Atje", 0);
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Atje") == 0, "Index should be 0.");
     ck_assert_msg(dpl_get_index_of_element(numbers,"x") == -1, "Element does not exist.");
 
-    dpl_insert_at_index(numbers, "b", 1);
-    ck_assert_msg(dpl_get_index_of_element(numbers,"b") == 1, "Index should be 1.");
-    ck_assert_msg(dpl_get_index_of_element(numbers,"a") == 0, "Index should be 0.");
-    ck_assert_msg(dpl_get_index_of_element(numbers,"\e") == -1, "Element does not exist.");
-
-    dpl_insert_at_index(numbers, "\e", 0);
-    ck_assert_msg(dpl_get_index_of_element(numbers,"\e") == 0, "Index should be 0.");
-    ck_assert_msg(dpl_get_index_of_element(numbers,"a") == 1, "Index should be 1.");
-    ck_assert_msg(dpl_get_index_of_element(numbers,"b") == 2, "Index should be 2.");
+    dpl_insert_at_index(numbers, "Voor", 1);
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Voor") == 1, "Index should be 1.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Atje") == 0, "Index should be 0.");
     ck_assert_msg(dpl_get_index_of_element(numbers,"x") == -1, "Element does not exist.");
 
-    dpl_insert_at_index(numbers, "a", 0);
-    ck_assert_msg(dpl_get_index_of_element(numbers,"\e") == 1, "Index should be 1.");
-    ck_assert_msg(dpl_get_index_of_element(numbers,"a") == 0, "Index should be 0.");
-    ck_assert_msg(dpl_get_index_of_element(numbers,"b") == 3, "Index should be 3.");
+    dpl_insert_at_index(numbers, "De", 2);
+    ck_assert_msg(dpl_get_index_of_element(numbers,"De") == 2, "Index should be 2.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Voor") == 1, "Index should be 1.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Atje") == 0, "Index should be 0.");
     ck_assert_msg(dpl_get_index_of_element(numbers,"x") == -1, "Element does not exist.");
+
+    dpl_insert_at_index(numbers, "Sfeer", 3);
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Atje") == 0, "Index should be 0.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Voor") == 1, "Index should be 1.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"De") == 2, "Index should be 2.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Sfeer") == 3, "Index should be 3.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"x") == -1, "Element does not exist.");
+
+    dpl_insert_at_index(numbers, "Sfeer", -1);
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Atje") == 1, "Index should be 1.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Voor") == 2, "Index should be 2.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"De") == 3, "Index should be 3.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"Sfeer") == 0, "Index should be 0.");
+    ck_assert_msg(dpl_get_index_of_element(numbers,"x") == -1, "Element does not exist.");
+
 
     dpl_free(&numbers);
 }
 
+/*
 void dpl_remove_at_index_test(void){
 
     ck_assert_msg(dpl_remove_at_index(NULL,0) == NULL, "There is no list.");
@@ -153,8 +163,8 @@ int main(void)
     dpl_size_test();
     dpl_get_reference_at_index_test();
     dpl_get_element_at_index_test();
-    /*
     dpl_get_index_of_element_test();
+    /*
     dpl_remove_at_index_test();
     */
     return 0;

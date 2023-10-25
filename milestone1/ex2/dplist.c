@@ -207,7 +207,7 @@ int dpl_get_index_of_element(dplist_t *list, element_t element) {
     else{
         dplist_node_t *dplist_node = list->head;
         for(count=0; count < dpl_size(list); count++){
-            if(dplist_node->element == element){
+            if(!strcmp(dplist_node->element,element)){
                 return count;
             }
             dplist_node = dplist_node->next;
