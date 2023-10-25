@@ -118,8 +118,6 @@ dplist_t *dpl_insert_at_index(dplist_t *list, element_t element, int index) {
 
 dplist_t *dpl_remove_at_index(dplist_t *list, int index) {
 
-    //TODO: add your code here
-
     if(list == NULL){
         return NULL;
     }
@@ -139,6 +137,7 @@ dplist_t *dpl_remove_at_index(dplist_t *list, int index) {
             node->next->prev = node->prev;
             node->prev->next = node->next;
         }
+        free(node->element);
         free(node);
         return list;
     }
