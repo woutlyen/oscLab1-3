@@ -16,7 +16,7 @@ int main(void)
 {
     CString *mystr;
     char c;
-    ² = Init_CString("Hello!");
+    mystr = Init_CString("Hello!");
     printf("Init:\n str: `%s' len: %d\n", mystr->str, mystr->len);
     c = Chomp(mystr);
     printf("Chomp '%c':\n str:`%s' len: %d\n", c, mystr->str, mystr->len);

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 #include "dplist.h"
 
 
@@ -76,8 +77,10 @@ dplist_t *dpl_insert_at_index(dplist_t *list, element_t element, int index) {
     if (list == NULL) return NULL;
 
     list_node = malloc(sizeof(dplist_node_t));
+    list_node->element = (element_t)malloc(sizeof(element)+1);
 
-    list_node->element = element;
+    strncpy(list_node->element, element, strlen(element)+1);
+
     // pointer drawing breakpoint
     if (list->head == NULL) { // covers case 1
         list_node->prev = NULL;
@@ -112,6 +115,8 @@ dplist_t *dpl_insert_at_index(dplist_t *list, element_t element, int index) {
 }
 
 dplist_t *dpl_remove_at_index(dplist_t *list, int index) {
+
+    //TODO: add your code here
 
     if(list == NULL){
         return NULL;
