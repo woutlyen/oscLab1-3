@@ -91,7 +91,6 @@ dplist_t *dpl_insert_at_index(dplist_t *list, void *element, int index, bool ins
     if (list == NULL) return NULL;
 
     list_node = malloc(sizeof(dplist_node_t));
-    //list_node->element = (void*)malloc(sizeof(element)+1);
 
     if(insert_copy){
         void* e = list->element_copy(element);
@@ -100,7 +99,6 @@ dplist_t *dpl_insert_at_index(dplist_t *list, void *element, int index, bool ins
     else{
         list_node->element = element;
     }
-    //strncpy(list_node->element, element, strlen(element)+1);
 
     // pointer drawing breakpoint
     if (list->head == NULL) { // covers case 1
@@ -214,7 +212,7 @@ int dpl_get_index_of_element(dplist_t *list, void *element) {
     int count;
 
     if(list == NULL || list->head == NULL){
-        return -1;
+        return (int) NULL;
     }
     else{
         dplist_node_t *dplist_node = list->head;
