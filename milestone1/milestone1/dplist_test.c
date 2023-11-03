@@ -193,7 +193,7 @@ void dpl_size_test(){
  *  Makes use of:
  *      - dpl_get_element_at_index()
  */
-void dpl_insert_element_at_index_test(){
+void dpl_insert_at_index_test(){
 
     dplist_t *list = NULL;
 
@@ -255,7 +255,7 @@ void dpl_insert_element_at_index_test(){
  * Tests the dpl_get_element_at_index() function
  *
  * Makes use of:
- *      - dpl_insert_element_at_index()
+ *      - dpl_insert_at_index()
  */
 void dpl_get_element_at_index_test(){
 
@@ -306,7 +306,7 @@ void dpl_get_element_at_index_test(){
  * Tests dpl_get_index_of_element()
  *
  * Makes use of:
- *      - dpl_insert_element_at_index()
+ *      - dpl_insert_at_index()
  *      - dpl_get_element_at_index()
  */
 void dpl_get_index_of_element_test(){
@@ -347,15 +347,134 @@ void dpl_get_index_of_element_test(){
     free(content4);
 }
 
+/**
+ * Tests dpl_remove_at_index()
+ *
+ * Makes use of:
+ *      - dpl_insert_at_index()
+ */
+void dpl_remove_at_index_test(){
+
+    dplist_t *list = NULL;
+
+    my_element_t *content1 = (my_element_t *)malloc(sizeof(my_element_t));
+    content1->id = 11;
+    content1->name = "bar";
+    my_element_t *content2 = (my_element_t *)malloc(sizeof(my_element_t));
+    content2->id = 12;
+    content2->name = "quux";
+    my_element_t *content3 = (my_element_t *)malloc(sizeof(my_element_t));
+    content3->id = 13;
+    content3->name = "gee";
+
+    ck_assert_msg(dpl_remove_at_index(NULL, 0, false)==NULL, "Failure: expected NULL value");
+    ck_assert_msg(dpl_remove_at_index(list, 0, false)==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    ck_assert_msg(dpl_remove_at_index(list, 0, false)==list, "Failure: expected list");
+
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_remove_at_index(list, 0, false);
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_remove_at_index(list, -100, false);
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_remove_at_index(list, 100, false);
+
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_insert_at_index(list, content3, 2, false);
+    dpl_remove_at_index(list, 0, false);
+    dpl_remove_at_index(list, 0, false);
+    dpl_remove_at_index(list, 0, false);
+
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_insert_at_index(list, content3, 2, false);
+    dpl_remove_at_index(list, 100, false);
+    dpl_remove_at_index(list, 100, false);
+    dpl_remove_at_index(list, 100, false);
+
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_insert_at_index(list, content3, 2, false);
+    dpl_remove_at_index(list, -100, false);
+    dpl_remove_at_index(list, -100, false);
+    dpl_remove_at_index(list, -100, false);
+
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_insert_at_index(list, content3, 2, false);
+    dpl_remove_at_index(list, 2, false);
+    dpl_remove_at_index(list, 1, false);
+    dpl_remove_at_index(list, 0, false);
+    dpl_free(&list, false);
+
+    //-----------------------------------------------------------------------
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    ck_assert_msg(dpl_remove_at_index(list, 0, false)==list, "Failure: expected list");
+
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_remove_at_index(list, 0, true);
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_remove_at_index(list, -100, true);
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_remove_at_index(list, 100, true);
+
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_insert_at_index(list, content3, 2, true);
+    dpl_remove_at_index(list, 0, true);
+    dpl_remove_at_index(list, 0, true);
+    dpl_remove_at_index(list, 0, true);
+
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_insert_at_index(list, content3, 2, true);
+    dpl_remove_at_index(list, 100, true);
+    dpl_remove_at_index(list, 100, true);
+    dpl_remove_at_index(list, 100, true);
+
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_insert_at_index(list, content3, 2, true);
+    dpl_remove_at_index(list, -100, true);
+    dpl_remove_at_index(list, -100, true);
+    dpl_remove_at_index(list, -100, true);
+
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_insert_at_index(list, content3, 2, true);
+    dpl_remove_at_index(list, 2, true);
+    dpl_remove_at_index(list, 1, true);
+    dpl_remove_at_index(list, 0, true);
+    dpl_free(&list, false);
+
+    /*
+    my_element_t *content1copy = (my_element_t*) element_copy(content1);
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1copy, 0, false);
+    dpl_remove_at_index(list, 0, true);
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_remove_at_index(list, 0, true);
+    dpl_free(&list, false);
+    */
+
+    free(content1);
+    free(content2);
+    free(content3);
+
+}
 
 int main(void) {
     //yourtest1();
     //yourtest2();
 
 
-    //dpl_insert_element_at_index_test();
-    //dpl_get_element_at_index_test();
+    dpl_insert_at_index_test();
+    dpl_get_element_at_index_test();
     dpl_get_index_of_element_test();
-    //dpl_size_test();
+    dpl_size_test();
+    dpl_remove_at_index_test();
     return 0;
 }
