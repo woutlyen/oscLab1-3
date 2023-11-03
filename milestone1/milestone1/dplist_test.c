@@ -450,15 +450,266 @@ void dpl_remove_at_index_test(){
     dpl_remove_at_index(list, 0, true);
     dpl_free(&list, false);
 
-    /*
-    my_element_t *content1copy = (my_element_t*) element_copy(content1);
+    free(content1);
+    free(content2);
+    free(content3);
+}
+
+void remove_test_1(){
+
+    //Initialize list
+    dplist_t *list = NULL;
+
+    //Initialize the elements
+    my_element_t *content1 = (my_element_t *)malloc(sizeof(my_element_t));
+    content1->id = 11;
+    content1->name = "bar";
+    my_element_t *content2 = (my_element_t *)malloc(sizeof(my_element_t));
+    content2->id = 12;
+    content2->name = "quux";
+    my_element_t *content3 = (my_element_t *)malloc(sizeof(my_element_t));
+    content3->id = 13;
+    content3->name = "gee";
+
+    //------------ Test 1 (insert_copy == FALSE && free_element == TRUE) ----------------
+
+    //Creating empty list
     list = dpl_create(element_copy, element_free, element_compare);
-    dpl_insert_at_index(list, content1copy, 0, false);
-    dpl_remove_at_index(list, 0, true);
+
+    //Adding the elements to the list
     dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_insert_at_index(list, content3, 2, false);
+
+    //Removing the list nodes and elements
+    dpl_remove_at_index(list, 2, true);
+    dpl_remove_at_index(list, 1, true);
     dpl_remove_at_index(list, 0, true);
+
+    //Removing the list
     dpl_free(&list, false);
+
+    //Not needed because free_element == TRUE
+    /*
+    free(content1);
+    free(content2);
+    free(content3);
     */
+}
+
+void remove_test_2() {
+
+    //Initialize list
+    dplist_t *list = NULL;
+
+    //Initialize the elements
+    my_element_t *content1 = (my_element_t *)malloc(sizeof(my_element_t));
+    content1->id = 11;
+    content1->name = "bar";
+    my_element_t *content2 = (my_element_t *)malloc(sizeof(my_element_t));
+    content2->id = 12;
+    content2->name = "quux";
+    my_element_t *content3 = (my_element_t *)malloc(sizeof(my_element_t));
+    content3->id = 13;
+    content3->name = "gee";
+
+    //------------ Test 2 (insert_copy == TRUE && free_element == TRUE) ----------------
+
+    //Creating empty list
+    list = dpl_create(element_copy, element_free, element_compare);
+
+    //Adding the elements to the list
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_insert_at_index(list, content3, 2, true);
+
+    //Removing the list nodes and elements
+    dpl_remove_at_index(list, 2, true);
+    dpl_remove_at_index(list, 1, true);
+    dpl_remove_at_index(list, 0, true);
+
+    //Removing the list
+    dpl_free(&list, false);
+
+    free(content1);
+    free(content2);
+    free(content3);
+
+}
+
+void remove_test_3(){
+
+    //Initialize list
+    dplist_t *list = NULL;
+
+    //Initialize the elements
+    my_element_t *content1 = (my_element_t *)malloc(sizeof(my_element_t));
+    content1->id = 11;
+    content1->name = "bar";
+    my_element_t *content2 = (my_element_t *)malloc(sizeof(my_element_t));
+    content2->id = 12;
+    content2->name = "quux";
+    my_element_t *content3 = (my_element_t *)malloc(sizeof(my_element_t));
+    content3->id = 13;
+    content3->name = "gee";
+
+    //------------ Test 3 (insert_copy == FALSE && free_element == TRUE) ----------------
+
+    //Copy of the declared elements above
+    my_element_t *content1_copy = element_copy(content1);
+    my_element_t *content2_copy = element_copy(content2);
+    my_element_t *content3_copy = element_copy(content3);
+
+    //Creating empty list
+    list = dpl_create(element_copy, element_free, element_compare);
+
+    //Adding the copies of the elements to the list w/ insert_copy == FALSE
+    dpl_insert_at_index(list, content1_copy, 0, false);
+    dpl_insert_at_index(list, content2_copy, 1, false);
+    dpl_insert_at_index(list, content3_copy, 2, false);
+
+    //Removing the list nodes and elements
+    dpl_remove_at_index(list, 2, true);
+    dpl_remove_at_index(list, 1, true);
+    dpl_remove_at_index(list, 0, true);
+
+    //Removing the list
+    dpl_free(&list, false);
+
+    free(content1);
+    free(content2);
+    free(content3);
+
+}
+
+void dpl_free_test(){
+
+    dplist_t *list = NULL;
+
+    my_element_t *content1 = (my_element_t *)malloc(sizeof(my_element_t));
+    content1->id = 11;
+    content1->name = "bar";
+    my_element_t *content2 = (my_element_t *)malloc(sizeof(my_element_t));
+    content2->id = 12;
+    content2->name = "quux";
+    my_element_t *content3 = (my_element_t *)malloc(sizeof(my_element_t));
+    content3->id = 13;
+    content3->name = "gee";
+
+    dpl_free(&list, false);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_free(&list, false);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_free(&list, false);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_free(&list, false);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1, 0, false);
+    dpl_insert_at_index(list, content2, 1, false);
+    dpl_insert_at_index(list, content3, 2, false);
+    dpl_free(&list, false);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    //--------------------------------------------------------------------
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_free(&list, true);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_free(&list, true);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content1, 0, true);
+    dpl_insert_at_index(list, content2, 1, true);
+    dpl_insert_at_index(list, content3, 2, true);
+    dpl_free(&list, true);
+    ck_assert_msg(list==NULL, "Failure: expected NULL value");
+
+    free(content1);
+    free(content2);
+    free(content3);
+}
+
+void dpl_get_element_at_reference_at_index_test(){
+
+    dplist_t *list = NULL;
+
+    my_element_t *content1 = (my_element_t *)malloc(sizeof(my_element_t));
+    content1->id = 11;
+    content1->name = "bar";
+    my_element_t *content2 = (my_element_t *)malloc(sizeof(my_element_t));
+    content2->id = 12;
+    content2->name = "quux";
+    my_element_t *content3 = (my_element_t *)malloc(sizeof(my_element_t));
+    content3->id = 13;
+    content3->name = "gee";
+
+    ck_assert_msg(dpl_get_reference_at_index(NULL,0)==NULL, "Failure: expected NULL as reference");
+    ck_assert_msg(dpl_get_reference_at_index(list,0)==NULL, "Failure: expected NULL as reference");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    ck_assert_msg(dpl_get_reference_at_index(list,0)==NULL, "Failure: expected NULL as reference");
+
+    dpl_insert_at_index(list, content1, 0, false);
+    ck_assert_msg(dpl_get_reference_at_index(list,0)!=NULL, "Failure: expected pointer as reference");
+    ck_assert_msg(dpl_get_reference_at_index(list,-10)!=NULL, "Failure: expected pointer as reference");
+    ck_assert_msg(dpl_get_reference_at_index(list,10)!=NULL, "Failure: expected pointer as reference");
+
+    dpl_insert_at_index(list, content2, 1, false);
+    ck_assert_msg(dpl_get_reference_at_index(list,0)==dpl_get_reference_at_index(list,-10), "Failure: expected the same reference");
+    ck_assert_msg(dpl_get_reference_at_index(list,1)==dpl_get_reference_at_index(list,10), "Failure: expected the same reference");
+    ck_assert_msg(dpl_get_reference_at_index(list,1)!=dpl_get_reference_at_index(list,-2), "Failure: didn't expect the same reference");
+    dpl_free(&list, false);
+
+
+    ck_assert_msg(dpl_get_element_at_reference(NULL,NULL)==NULL, "Failure: expected NULL as element");
+    ck_assert_msg(dpl_get_element_at_reference(list,NULL)==NULL, "Failure: expected NULL as element");
+
+    list = dpl_create(element_copy, element_free, element_compare);
+    ck_assert_msg(dpl_get_element_at_reference(list,NULL)==NULL, "Failure: expected NULL as element");
+
+    dpl_insert_at_index(list, content1, 0, false);
+    ck_assert_msg(dpl_get_element_at_reference(list,NULL)==NULL, "Failure: expected NULL as element");
+
+    dplist_node_t *ref1 = dpl_get_reference_at_index(list, 0);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref1)==content1, "Failure: expected content1 as element");
+    ref1 = dpl_get_reference_at_index(list, 10);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref1)==content1, "Failure: expected content1 as element");
+    ref1 = dpl_get_reference_at_index(list, -10);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref1)==content1, "Failure: expected content1 as element");
+
+    dpl_insert_at_index(list, content2, 1, false);
+    dplist_node_t *ref2 = dpl_get_reference_at_index(list, 1);
+    ref1 = dpl_get_reference_at_index(list, 0);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref1)==content1, "Failure: expected content1 as element");
+    ref1 = dpl_get_reference_at_index(list, -10);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref1)==content1, "Failure: expected content1 as element");
+    ck_assert_msg(dpl_get_element_at_reference(list,ref2)==content2, "Failure: expected content2 as element");
+    ref2 = dpl_get_reference_at_index(list, 10);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref2)==content2, "Failure: expected content2 as element");
+
+    dplist_t *list2 = dpl_create(element_copy, element_free, element_compare);
+    dpl_insert_at_index(list, content3, 0, false);
+    dplist_node_t *ref3 = dpl_get_reference_at_index(list2, 0);
+    ck_assert_msg(dpl_get_element_at_reference(list,ref3)==NULL, "Failure: expected NULL as element");
+    dpl_free(&list, false);
+    dpl_free(&list2, false);
 
     free(content1);
     free(content2);
@@ -467,14 +718,20 @@ void dpl_remove_at_index_test(){
 }
 
 int main(void) {
-    //yourtest1();
-    //yourtest2();
-
+    yourtest1();
+    yourtest2();
 
     dpl_insert_at_index_test();
     dpl_get_element_at_index_test();
     dpl_get_index_of_element_test();
     dpl_size_test();
     dpl_remove_at_index_test();
+
+    //remove_test_1();
+    remove_test_2();
+    remove_test_3();
+
+    dpl_free_test();
+    dpl_get_element_at_reference_at_index_test();
     return 0;
 }
