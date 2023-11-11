@@ -102,8 +102,8 @@ void datamgr_free(){
 
 uint16_t datamgr_get_room_id(sensor_id_t sensor_id){
 
-        for (int count = 0; count < dpl_size(list); count++) {
-            element_t *element = dpl_get_element_at_index(list, count);
+    for (int count = 0; count < dpl_size(list); count++) {
+        element_t *element = dpl_get_element_at_index(list, count);
         if(element->sensorID == sensor_id){
             return element->roomID;
         }
@@ -114,6 +114,13 @@ uint16_t datamgr_get_room_id(sensor_id_t sensor_id){
 
 sensor_value_t datamgr_get_avg(sensor_id_t sensor_id){
 
+    for (int count = 0; count < dpl_size(list); count++) {
+        element_t *element = dpl_get_element_at_index(list, count);
+        if(element->sensorID == sensor_id){
+            return element->avg;
+        }
+    }
+    ERROR_HANDLER(true, "Invalid sensor_id");
 }
 
 
