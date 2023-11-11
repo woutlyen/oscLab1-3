@@ -17,7 +17,7 @@
                       }                                 \
                     } while(0)
 
-
+#define DEBUG
 #define NUM_MEASUREMENTS    100
 #define SLEEP_TIME          30      // every SLEEP_TIME seconds, sensors wake up and measure temperature
 #define NUM_SENSORS         8       // also defines number of rooms (currently 1 room = 1 sensor)

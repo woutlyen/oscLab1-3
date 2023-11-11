@@ -13,10 +13,12 @@
 #define RUN_AVG_LENGTH 5
 #endif
 
+#define SET_MAX_TEMP 30
 #ifndef SET_MAX_TEMP
 #error SET_MAX_TEMP not set
 #endif
 
+#define SET_MIN_TEMP 0
 #ifndef SET_MIN_TEMP
 #error SET_MIN_TEMP not set
 #endif
@@ -30,6 +32,10 @@
                         exit(EXIT_FAILURE);                         \
                       }                                             \
                     } while(0)
+
+void* element_copy(void * element);
+void element_free(void ** element);
+int element_compare(void * x, void * y);
 
 /**
  *  This method holds the core functionality of your datamgr. It takes in 2 file pointers to the sensor files and parses them. 
