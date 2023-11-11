@@ -61,15 +61,15 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
 
 
     //Declaration of variables in the fp_sensor_data file
-    uint16_t sensorID;
-    double temperature;
-    time_t timestamp;
-
+    sensor_data_t *sensor_data = (sensor_data_t*)malloc(sizeof(sensor_data_t));
+    uint16_t *sensor_id_t = &sensor_data->id;
+    double *sensor_value_t = &sensor_data->value;
+    time_t *sensor_ts_t = &sensor_data->ts;
 
     //Reading and adding all the assigned sensor data in the list
-    while(fread(&sensorID, sizeof(uint16_t), 1, fp_sensor_data) != 0) {
-        fread(&temperature, sizeof(double), 1, fp_sensor_data);
-        fread(&timestamp, sizeof(time_t), 1, fp_sensor_data);
+    while(fread(sensor_id_t, sizeof(uint16_t), 1, fp_sensor_data) != 0) {
+        fread(sensor_value_t, sizeof(double), 1, fp_sensor_data);
+        fread(sensor_ts_t, sizeof(time_t), 1, fp_sensor_data);
 
         //Print the time_t in human language
         //printf("%s", asctime(gmtime(&timestamp)));
@@ -78,15 +78,15 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
 
             element_t *element_at_index = (element_t*)dpl_get_element_at_index(list, count);
 
-            if (element_at_index->sensorID == sensorID){
-                element_at_index->avg = temperature;
-                element_at_index->last_modified = timestamp;
-                //printf("%hu %f %lld \n", element_at_index->sensorID, element_at_index->avg, (long long)element_at_index->last_modified);
+            if (element_at_index->sensorID == *sensor_id_t){
+                element_at_index->avg = *sensor_value_t;
+                element_at_index->last_modified = *sensor_ts_t;
+                printf("%hu %f %lld \n", element_at_index->sensorID, element_at_index->avg, (long long)element_at_index->last_modified);
                 break;
             }
 
             if (count == dpl_size(list)-1){
-                printf("%s %hu %s\n", "sensorID ", sensorID, " not found");
+                printf("%s %hu %s\n", "sensorID ", *sensor_id_t, " not found");
             }
         }
     }
