@@ -15,6 +15,7 @@ typedef struct {
     time_t last_modified;
 } element_t;
 
+dplist_t *list;
 
 void * element_copy(void * element) {
     element_t* copy = malloc(sizeof (element_t));
@@ -47,7 +48,7 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
 
 
     //Initialise dplist with feedback functions
-    dplist_t *list = dpl_create(element_copy, element_free, element_compare);
+    list = dpl_create(element_copy, element_free, element_compare);
 
 
     //Reading and adding all the assigned sensorIDs to roomIDs in the list
@@ -89,11 +90,13 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
             }
         }
     }
+
+    free(element);
 }
 
 
 void datamgr_free(){
-
+    dpl_free(&list, true);
 }
 
 
