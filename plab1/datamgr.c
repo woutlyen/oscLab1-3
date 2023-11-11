@@ -80,6 +80,7 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
             if (element_at_index->sensorID == sensorID){
                 element_at_index->avg = temperature;
                 element_at_index->last_modified = timestamp;
+                //printf("%hu %f %lld \n", element_at_index->sensorID, element_at_index->avg, (long long)element_at_index->last_modified);
                 break;
             }
 
