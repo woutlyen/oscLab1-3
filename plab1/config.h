@@ -5,6 +5,7 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#define RUN_AVG_LENGTH 5
 #define SET_MAX_TEMP 30
 #define SET_MIN_TEMP 0
 

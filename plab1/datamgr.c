@@ -14,6 +14,7 @@ typedef struct {
     time_t last_modified;
 } element_t;
 
+
 dplist_t *list;
 
 void * element_copy(void * element) {
@@ -33,29 +34,49 @@ void element_free(void ** element) {
 
 int element_compare(void * x, void * y) {
     //TODO implement this feedback function
-    //return ((((element_t*)x)->id < ((element_t*)y)->id) ? -1 : (((element_t*)x)->id == ((element_t*)y)->id) ? 0 : 1);
     return (((element_t*)x)->sensorID == ((element_t*)y)->sensorID ? 0 : 1);
+}
+
+
+typedef struct {
+    uint16_t sensorID;
+    int counter;
+    double sum;
+} avg_t;
+
+dplist_t *avg_list;
+
+void * element_copy_avg(void * element) {
+    avg_t * copy = malloc(sizeof (avg_t));
+    assert(copy != NULL);
+    copy->sensorID = ((avg_t *)element)->sensorID;
+    copy->counter = ((avg_t *)element)->counter;
+    copy->sum = ((avg_t *)element)->sum;
+    return (void *) copy;
 }
 
 
 void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
     //TODO logging data to the stderr file
-    //TODO calculating the average temperature
     //TODO implement ERROR_HANDLER
 
     //Malloc one element_t to temporarily store the data of one line in the room_sensor_map file
     element_t *element = (element_t*)malloc(sizeof(element_t));
-
+    avg_t *avg = (avg_t*)malloc(sizeof(avg_t));
 
     //Initialise dplist with feedback functions
     list = dpl_create(element_copy, element_free, element_compare);
-
+    avg_list = dpl_create(element_copy_avg, element_free, element_compare);
 
     //Reading and adding all the assigned sensorIDs to roomIDs in the list
     char line[255];
     while (fgets(line, 255, fp_sensor_map) != NULL){
         sscanf(line,"%hu %hu", &(element->roomID), &(element->sensorID));
         dpl_insert_at_index(list, element, dpl_size(list), true);
+
+        avg->sensorID = element->sensorID;
+        avg->counter = 0;
+        dpl_insert_at_index(avg_list, avg, dpl_size(avg_list), true);
         //printf("%hu %hu\n", element->roomID, element->sensorID );
     }
 
@@ -79,7 +100,19 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
             element_t *element_at_index = (element_t*)dpl_get_element_at_index(list, count);
 
             if (element_at_index->sensorID == *sensor_id_t){
-                element_at_index->avg = *sensor_value_t;
+                avg_t *avg_at_index = (avg_t*)dpl_get_element_at_index(avg_list, count);
+                if(avg_at_index->counter < RUN_AVG_LENGTH){
+                    avg_at_index->counter = avg_at_index->counter+1;
+                    avg_at_index->sum = avg_at_index->sum+(*sensor_value_t);
+                    element_at_index->avg = 0;
+
+                    if (avg_at_index->counter == RUN_AVG_LENGTH){
+                        element_at_index->avg = (avg_at_index->sum)/RUN_AVG_LENGTH;
+                    }
+                }
+                else{
+                    element_at_index->avg = ((RUN_AVG_LENGTH-1.0)/RUN_AVG_LENGTH)*(element_at_index->avg)+(1.0/RUN_AVG_LENGTH)*(*sensor_value_t);
+                }
                 element_at_index->last_modified = *sensor_ts_t;
                 printf("%hu %f %lld \n", element_at_index->sensorID, element_at_index->avg, (long long)element_at_index->last_modified);
                 break;
@@ -92,11 +125,14 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
     }
 
     free(element);
+    free(avg);
+    free(sensor_data);
 }
 
 
 void datamgr_free(){
     dpl_free(&list, true);
+    dpl_free(&avg_list, true);
 }
 
 
