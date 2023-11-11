@@ -2,7 +2,6 @@
  * \Author: Wout Lyen
  */
 
-#define _GNU_SOURCE
 #include "datamgr.h"
 #include "lib/dplist.h"
 
@@ -19,8 +18,6 @@ dplist_t *list;
 
 void * element_copy(void * element) {
     element_t* copy = malloc(sizeof (element_t));
-    //char* new_name;
-    //asprintf(&new_name,"%s",((element_t*)element)->name); //asprintf requires _GNU_SOURCE
     assert(copy != NULL);
     copy->roomID = ((element_t*)element)->roomID;
     copy->sensorID = ((element_t*)element)->sensorID;
@@ -37,11 +34,14 @@ void element_free(void ** element) {
 int element_compare(void * x, void * y) {
     //TODO implement this feedback function
     //return ((((element_t*)x)->id < ((element_t*)y)->id) ? -1 : (((element_t*)x)->id == ((element_t*)y)->id) ? 0 : 1);
-    return -1;
+    return (((element_t*)x)->sensorID == ((element_t*)y)->sensorID ? 0 : 1);
 }
 
 
 void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
+    //TODO logging data to the stderr file
+    //TODO calculating the average temperature
+    //TODO implement ERROR_HANDLER
 
     //Malloc one element_t to temporarily store the data of one line in the room_sensor_map file
     element_t *element = (element_t*)malloc(sizeof(element_t));
@@ -102,6 +102,13 @@ void datamgr_free(){
 
 uint16_t datamgr_get_room_id(sensor_id_t sensor_id){
 
+        for (int count = 0; count < dpl_size(list); count++) {
+            element_t *element = dpl_get_element_at_index(list, count);
+        if(element->sensorID == sensor_id){
+            return element->roomID;
+        }
+    }
+    ERROR_HANDLER(true, "Invalid sensor_id");
 }
 
 
