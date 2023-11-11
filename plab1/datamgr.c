@@ -126,6 +126,13 @@ sensor_value_t datamgr_get_avg(sensor_id_t sensor_id){
 
 time_t datamgr_get_last_modified(sensor_id_t sensor_id){
 
+    for (int count = 0; count < dpl_size(list); count++) {
+        element_t *element = dpl_get_element_at_index(list, count);
+        if(element->sensorID == sensor_id){
+            return element->last_modified;
+        }
+    }
+    ERROR_HANDLER(true, "Invalid sensor_id");
 }
 
 
