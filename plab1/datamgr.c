@@ -101,7 +101,6 @@ void datamgr_free(){
 
 
 uint16_t datamgr_get_room_id(sensor_id_t sensor_id){
-
     for (int count = 0; count < dpl_size(list); count++) {
         element_t *element = dpl_get_element_at_index(list, count);
         if(element->sensorID == sensor_id){
@@ -113,7 +112,6 @@ uint16_t datamgr_get_room_id(sensor_id_t sensor_id){
 
 
 sensor_value_t datamgr_get_avg(sensor_id_t sensor_id){
-
     for (int count = 0; count < dpl_size(list); count++) {
         element_t *element = dpl_get_element_at_index(list, count);
         if(element->sensorID == sensor_id){
@@ -125,7 +123,6 @@ sensor_value_t datamgr_get_avg(sensor_id_t sensor_id){
 
 
 time_t datamgr_get_last_modified(sensor_id_t sensor_id){
-
     for (int count = 0; count < dpl_size(list); count++) {
         element_t *element = dpl_get_element_at_index(list, count);
         if(element->sensorID == sensor_id){
@@ -137,5 +134,5 @@ time_t datamgr_get_last_modified(sensor_id_t sensor_id){
 
 
 int datamgr_get_total_sensors(){
-
+    return dpl_size(list);
 }
