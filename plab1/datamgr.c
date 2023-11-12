@@ -19,7 +19,8 @@ dplist_t *list;
 
 void * element_copy(void * element) {
     element_t* copy = malloc(sizeof (element_t));
-    assert(copy != NULL);
+    ERROR_HANDLER(!copy, "Malloc of the element_t copy struct failed");
+    //assert(copy != NULL);
     copy->roomID = ((element_t*)element)->roomID;
     copy->sensorID = ((element_t*)element)->sensorID;
     copy->avg = ((element_t*)element)->avg;
@@ -33,7 +34,6 @@ void element_free(void ** element) {
 }
 
 int element_compare(void * x, void * y) {
-    //TODO implement this feedback function
     return (((element_t*)x)->sensorID == ((element_t*)y)->sensorID ? 0 : 1);
 }
 
@@ -48,7 +48,8 @@ dplist_t *avg_list;
 
 void * element_copy_avg(void * element) {
     avg_t * copy = malloc(sizeof (avg_t));
-    assert(copy != NULL);
+    ERROR_HANDLER(!copy, "Malloc of the element_t copy struct failed");
+    //assert(copy != NULL);
     copy->sensorID = ((avg_t *)element)->sensorID;
     copy->counter = ((avg_t *)element)->counter;
     copy->sum = ((avg_t *)element)->sum;
@@ -62,7 +63,9 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
 
     //Malloc one element_t to temporarily store the data of one line in the room_sensor_map file
     element_t *element = (element_t*)malloc(sizeof(element_t));
+    ERROR_HANDLER(!element, "Malloc of the element_t struct failed");
     avg_t *avg = (avg_t*)malloc(sizeof(avg_t));
+    ERROR_HANDLER(!avg, "Malloc of the avg_t struct failed");
 
     //Initialise dplist with feedback functions
     list = dpl_create(element_copy, element_free, element_compare);
@@ -83,6 +86,7 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
 
     //Declaration of variables in the fp_sensor_data file
     sensor_data_t *sensor_data = (sensor_data_t*)malloc(sizeof(sensor_data_t));
+    ERROR_HANDLER(!sensor_data, "Malloc of the sensor_data Struct failed");
     uint16_t *sensor_id_t = &sensor_data->id;
     double *sensor_value_t = &sensor_data->value;
     time_t *sensor_ts_t = &sensor_data->ts;
@@ -114,7 +118,7 @@ void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
                     element_at_index->avg = ((RUN_AVG_LENGTH-1.0)/RUN_AVG_LENGTH)*(element_at_index->avg)+(1.0/RUN_AVG_LENGTH)*(*sensor_value_t);
                 }
                 element_at_index->last_modified = *sensor_ts_t;
-                printf("%hu %f %lld \n", element_at_index->sensorID, element_at_index->avg, (long long)element_at_index->last_modified);
+                //printf("%hu %f %lld \n", element_at_index->sensorID, element_at_index->avg, (long long)element_at_index->last_modified);
                 break;
             }
 
