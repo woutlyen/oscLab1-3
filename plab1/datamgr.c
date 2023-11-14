@@ -59,7 +59,6 @@ void * element_copy_avg(void * element) {
 
 void datamgr_parse_sensor_files(FILE *fp_sensor_map, FILE *fp_sensor_data){
     //TODO logging data to the stderr file
-    //TODO implement ERROR_HANDLER
 
     //Malloc one element_t to temporarily store the data of one line in the room_sensor_map file
     element_t *element = (element_t*)malloc(sizeof(element_t));
