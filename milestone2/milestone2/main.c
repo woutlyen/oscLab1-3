@@ -12,7 +12,9 @@
 
 int main()
 {
-    FILE *f = open_db("sensor_db.csv", true);
+    //FILE *f = open_db("sensor_db.csv", true);
+    char x = 0;
+    FILE *f = open_db(&x, true);
 
     sleep(1);
     sensor_id_t id = 1;
@@ -30,7 +32,7 @@ int main()
     insert_sensor(f, id, v, ts);
     sleep(5);
     insert_sensor(f, 4, v, ts);
-
     close_db(f);
+
     return 0;
 }

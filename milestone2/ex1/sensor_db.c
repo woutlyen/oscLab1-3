@@ -10,7 +10,7 @@ FILE * open_db(char * filename, bool append){
     }
     else{
 
-        file = fopen(filename, "a");
+        file = fopen(filename, "w");
     }
     return file;
 }

@@ -54,3 +54,6 @@ dkms.conf
 plab1/sensor_data
 plab1/sensor_data_text
 plab1/file_creator
+
+*.csv
+*.log
