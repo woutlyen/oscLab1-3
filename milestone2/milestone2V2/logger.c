@@ -98,7 +98,6 @@ int create_log_process(){
 
             long length = read(fd[READ_END], &msg, SIZE);
             if (length <= 0){
-                //msg = NO_MESSAGE;
                 write_to_log_process("Log process ended. Data file not closed.");
                 msg = END;
             }

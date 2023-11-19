@@ -57,7 +57,6 @@ int child_process() {
                 msg = NO_MESSAGE;
             }
 
-            printf("%c\n", msg);
             if (msg == INSERT){
                 write_to_log_process("Data inserted.");
             }
