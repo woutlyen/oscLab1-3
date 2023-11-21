@@ -140,5 +140,4 @@ int create_log_process(){
 int end_log_process(){
     close(fd[READ_END]);
     exit(0);
-    //return 0;
 }
