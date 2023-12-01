@@ -69,22 +69,14 @@ int sbuffer_remove(sbuffer_t *buffer, sensor_data_t *data) {
 
     pthread_mutex_lock(&lock);
 
-    /*
-    if (buffer_size == 0){
-        pthread_cond_wait(&cond, &lock);
-    }
-    */
-
     sbuffer_node_t *dummy;
     if (buffer == NULL) {
         pthread_mutex_unlock(&lock);
         return SBUFFER_FAILURE;
     }
 
-    if (buffer->head == NULL) {
+    while (buffer->head == NULL) {
         pthread_cond_wait(&cond, &lock);
-        //pthread_mutex_unlock(&lock);
-        //return SBUFFER_NO_DATA;
     }
 
     *data = buffer->head->data;
@@ -104,7 +96,6 @@ int sbuffer_remove(sbuffer_t *buffer, sensor_data_t *data) {
     }
     free(dummy);
 
-    //buffer_size--;
     pthread_mutex_unlock(&lock);
 
     return SBUFFER_SUCCESS;
@@ -142,7 +133,6 @@ int sbuffer_insert(sbuffer_t *buffer, sensor_data_t *data) {
         return SBUFFER_SUCCESS;
     }
 
-    //buffer_size++;
     pthread_cond_signal(&cond);
     pthread_mutex_unlock(&lock);
 

@@ -9,12 +9,6 @@
 #include "config.h"
 #include "sbuffer.h"
 
-/*
-pthread_mutex_t lock;
-pthread_cond_t cond;
-int buffer_size = 0;
-*/
-
 void *writer_tread(void *vargp){
 
     FILE *fptr;
@@ -33,11 +27,7 @@ void *writer_tread(void *vargp){
         fread(sensor_value_t, sizeof(double), 1, fptr);
         fread(sensor_ts_t, sizeof(time_t), 1, fptr);
 
-        //pthread_mutex_lock(&lock);
         sbuffer_insert(buf, sensor_data);
-        //buffer_size++;
-        //pthread_cond_signal(&cond);
-        //pthread_mutex_unlock(&lock);
 
         usleep(10000);
     }
@@ -46,11 +36,7 @@ void *writer_tread(void *vargp){
     sensor_data->value = 0;
     sensor_data->ts = 0;
 
-    //pthread_mutex_lock(&lock);
     sbuffer_insert(buf, sensor_data);
-    //buffer_size++;
-    //pthread_cond_broadcast(&cond);
-    //pthread_mutex_unlock(&lock);
 
     fclose(fptr);
     free(sensor_data);
@@ -64,24 +50,11 @@ void *reader_thread(void *vargp){
 
     while(1){
 
-        /*
-        pthread_mutex_lock(&lock);
-        if (buffer_size == 0){
-            pthread_cond_wait(&cond, &lock);
-        }
-         */
-
         sbuffer_remove(buf,sensor_data);
 
-        //printf("%d\n", buffer_size);
         if (sensor_data->id == 0){
             break;
         }
-
-        //buffer_size--;
-        //pthread_mutex_unlock(&lock);
-
-
 
         FILE *file = fopen("sensor_data_out.csv", "a");
         fprintf(file,"sensor id = %" PRIu16 " - temperature = %f - timestamp = %ld\n", sensor_data->id, sensor_data->value,
@@ -104,18 +77,6 @@ int main(){
             return -1;
         }
 
-        /*
-        if (pthread_mutex_init(&lock, NULL) != 0) {
-            printf("\n mutex init has failed\n");
-            return 1;
-        }
-
-        if (pthread_cond_init(&cond, NULL) != 0) {
-            printf("\n condition init has failed\n");
-            return 1;
-        }
-        */
-
         printf("Before Thread\n");
         pthread_create(&write_thread_id, NULL, writer_tread, (void *) buffer);
         pthread_create(&reader_thread_id, NULL, reader_thread, (void *) buffer);
@@ -126,8 +87,6 @@ int main(){
         printf("After Thread\n");
 
         sbuffer_free(&buffer);
-
-        //pthread_mutex_destroy(&lock);
     }
     return 0;
 }
