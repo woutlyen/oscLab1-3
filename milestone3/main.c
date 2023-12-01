@@ -9,6 +9,7 @@
 #include "config.h"
 #include "sbuffer.h"
 
+pthread_mutex_t lock;
 
 void *writer_tread(void *vargp){
 
@@ -47,14 +48,23 @@ void *reader_thread(void *vargp){
     sbuffer_t *buf = (sbuffer_t*) vargp;
     sensor_data_t *sensor_data = malloc(sizeof(sensor_data_t));
 
+    pthread_mutex_lock(&lock);
     sbuffer_remove(buf,sensor_data);
+    pthread_mutex_unlock(&lock);
+
     while (sensor_data->id != 0){
 
-        sbuffer_remove(buf,sensor_data);
+        FILE *file = fopen("sensor_data_out.csv", "a");
+        fprintf(file,"sensor id = %" PRIu16 " - temperature = %f - timestamp = %ld\n", sensor_data->id, sensor_data->value,
+               (long int) sensor_data->ts);
+        fclose(file);
         printf("sensor id = %" PRIu16 " - temperature = %f - timestamp = %ld\n", sensor_data->id, sensor_data->value,
                (long int) sensor_data->ts);
-
         usleep(25000);
+
+        pthread_mutex_lock(&lock);
+        sbuffer_remove(buf,sensor_data);
+        pthread_mutex_unlock(&lock);
     }
 
     free(sensor_data);
@@ -70,6 +80,11 @@ int main(){
         return -1;
     }
 
+    if (pthread_mutex_init(&lock, NULL) != 0) {
+        printf("\n mutex init has failed\n");
+        return 1;
+    }
+
     printf("Before Thread\n");
     pthread_create(&write_thread_id, NULL, writer_tread, (void*)buffer);
     pthread_create(&reader_thread_id, NULL, reader_thread, (void*)buffer);
@@ -80,6 +95,7 @@ int main(){
     printf("After Thread\n");
 
     sbuffer_free(&buffer);
+    pthread_mutex_destroy(&lock);
 
     return 0;
 }
