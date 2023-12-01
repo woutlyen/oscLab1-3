@@ -9,10 +9,11 @@
 #include "config.h"
 #include "sbuffer.h"
 
+sbuffer_t *buffer;
+
 void *writer_tread(void *vargp){
 
     FILE *fptr;
-    sbuffer_t *buf = (sbuffer_t*) vargp;
 
     fptr = fopen("sensor_data", "r");
 
@@ -27,7 +28,7 @@ void *writer_tread(void *vargp){
         fread(sensor_value_t, sizeof(double), 1, fptr);
         fread(sensor_ts_t, sizeof(time_t), 1, fptr);
 
-        sbuffer_insert(buf, sensor_data);
+        sbuffer_insert(buffer, sensor_data);
 
         usleep(10000);
     }
@@ -36,7 +37,7 @@ void *writer_tread(void *vargp){
     sensor_data->value = 0;
     sensor_data->ts = 0;
 
-    sbuffer_insert(buf, sensor_data);
+    sbuffer_insert(buffer, sensor_data);
 
     fclose(fptr);
     free(sensor_data);
@@ -45,12 +46,11 @@ void *writer_tread(void *vargp){
 
 void *reader_thread(void *vargp){
 
-    sbuffer_t *buf = (sbuffer_t*) vargp;
     sensor_data_t *sensor_data = malloc(sizeof(sensor_data_t));
 
     while(1){
 
-        sbuffer_remove(buf,sensor_data);
+        sbuffer_remove(buffer,sensor_data);
 
         if (sensor_data->id == 0){
             break;
@@ -60,8 +60,8 @@ void *reader_thread(void *vargp){
         fprintf(file,"sensor id = %" PRIu16 " - temperature = %f - timestamp = %ld\n", sensor_data->id, sensor_data->value,
                 (long int) sensor_data->ts);
         fclose(file);
-        printf("sensor id = %" PRIu16 " - temperature = %f - timestamp = %ld\n", sensor_data->id, sensor_data->value, (long int) sensor_data->ts);
-        usleep(25);
+        //printf("sensor id = %" PRIu16 " - temperature = %f - timestamp = %ld\n", sensor_data->id, sensor_data->value, (long int) sensor_data->ts);
+        usleep(25000);
 
     }
     free(sensor_data);
@@ -71,20 +71,20 @@ void *reader_thread(void *vargp){
 int main(){
     for (int i = 0; i < 1; i++) {
         pthread_t write_thread_id, reader_thread_id, reader_thread_id2;
-        sbuffer_t *buffer;
 
         if (sbuffer_init(&buffer) == SBUFFER_FAILURE) {
             return -1;
         }
 
-        printf("Before Thread\n");
-        pthread_create(&write_thread_id, NULL, writer_tread, (void *) buffer);
-        pthread_create(&reader_thread_id, NULL, reader_thread, (void *) buffer);
-        pthread_create(&reader_thread_id2, NULL, reader_thread, (void *) buffer);
+        //printf("Before Thread\n");
+        pthread_create(&write_thread_id, NULL, writer_tread, NULL);
+        pthread_create(&reader_thread_id, NULL, reader_thread, NULL);
+        pthread_create(&reader_thread_id2, NULL, reader_thread, NULL);
+
         pthread_join(write_thread_id, NULL);
         pthread_join(reader_thread_id, NULL);
         pthread_join(reader_thread_id2, NULL);
-        printf("After Thread\n");
+        //printf("After Thread\n");
 
         sbuffer_free(&buffer);
     }
