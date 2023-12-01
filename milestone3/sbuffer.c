@@ -4,7 +4,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 #include "sbuffer.h"
+
+pthread_mutex_t lock;
+pthread_cond_t cond;
+//int buffer_size = 0;
 
 /**
  * basic node for the buffer, these nodes are linked together to create the buffer
@@ -23,6 +28,17 @@ struct sbuffer {
 };
 
 int sbuffer_init(sbuffer_t **buffer) {
+
+    if (pthread_mutex_init(&lock, NULL) != 0) {
+        printf("\n mutex init has failed\n");
+        return SBUFFER_FAILURE;
+    }
+
+    if (pthread_cond_init(&cond, NULL) != 0) {
+        printf("\n condition init has failed\n");
+        return SBUFFER_FAILURE;
+    }
+
     *buffer = malloc(sizeof(sbuffer_t));
     if (*buffer == NULL) return SBUFFER_FAILURE;
     (*buffer)->head = NULL;
@@ -42,16 +58,39 @@ int sbuffer_free(sbuffer_t **buffer) {
     }
     free(*buffer);
     *buffer = NULL;
+
+    pthread_cond_destroy(&cond);
+    pthread_mutex_destroy(&lock);
+
     return SBUFFER_SUCCESS;
 }
 
 int sbuffer_remove(sbuffer_t *buffer, sensor_data_t *data) {
+
+    pthread_mutex_lock(&lock);
+
+    /*
+    if (buffer_size == 0){
+        pthread_cond_wait(&cond, &lock);
+    }
+    */
+
     sbuffer_node_t *dummy;
-    if (buffer == NULL) return SBUFFER_FAILURE;
-    while (buffer->head == NULL);
+    if (buffer == NULL) {
+        pthread_mutex_unlock(&lock);
+        return SBUFFER_FAILURE;
+    }
+
+    if (buffer->head == NULL) {
+        pthread_cond_wait(&cond, &lock);
+        //pthread_mutex_unlock(&lock);
+        //return SBUFFER_NO_DATA;
+    }
+
     *data = buffer->head->data;
 
     if (data->id == 0){
+        pthread_mutex_unlock(&lock);
         return SBUFFER_SUCCESS;
     }
 
@@ -64,14 +103,28 @@ int sbuffer_remove(sbuffer_t *buffer, sensor_data_t *data) {
         buffer->head = buffer->head->next;
     }
     free(dummy);
+
+    //buffer_size--;
+    pthread_mutex_unlock(&lock);
+
     return SBUFFER_SUCCESS;
 }
 
 int sbuffer_insert(sbuffer_t *buffer, sensor_data_t *data) {
+
+    pthread_mutex_lock(&lock);
+
     sbuffer_node_t *dummy;
-    if (buffer == NULL) return SBUFFER_FAILURE;
+    if (buffer == NULL) {
+        pthread_mutex_unlock(&lock);
+        return SBUFFER_FAILURE;
+    }
     dummy = malloc(sizeof(sbuffer_node_t));
-    if (dummy == NULL) return SBUFFER_FAILURE;
+    if (dummy == NULL) {
+        pthread_mutex_unlock(&lock);
+        return SBUFFER_FAILURE;
+    }
+
     dummy->data = *data;
     dummy->next = NULL;
     if (buffer->tail == NULL) // buffer empty (buffer->head should also be NULL
@@ -82,5 +135,16 @@ int sbuffer_insert(sbuffer_t *buffer, sensor_data_t *data) {
         buffer->tail->next = dummy;
         buffer->tail = buffer->tail->next;
     }
+
+    if (data->id == 0){
+        pthread_cond_broadcast(&cond);
+        pthread_mutex_unlock(&lock);
+        return SBUFFER_SUCCESS;
+    }
+
+    //buffer_size++;
+    pthread_cond_signal(&cond);
+    pthread_mutex_unlock(&lock);
+
     return SBUFFER_SUCCESS;
 }
