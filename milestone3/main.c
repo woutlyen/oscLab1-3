@@ -11,7 +11,7 @@
 
 sbuffer_t *buffer;
 
-void *writer_tread(void *vargp){
+void *writer_thread(void *vargp){
 
     FILE *fptr;
 
@@ -77,7 +77,7 @@ int main(){
         }
 
         //printf("Before Thread\n");
-        pthread_create(&write_thread_id, NULL, writer_tread, NULL);
+        pthread_create(&write_thread_id, NULL, writer_thread, NULL);
         pthread_create(&reader_thread_id, NULL, reader_thread, NULL);
         pthread_create(&reader_thread_id2, NULL, reader_thread, NULL);
 
